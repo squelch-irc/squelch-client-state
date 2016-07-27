@@ -72,10 +72,11 @@ module.exports = {
     /**
      * Action creator for a user quitting a channel.
      */
-    userQuit({ nick }) {
+    userQuit({ nick, channels }) {
         return {
             type: module.exports.USER_QUIT,
-            nick
+            nick,
+            channels
         };
     },
 

@@ -171,9 +171,11 @@ test('userLeave', t => {
 test('userQuit', t => {
     t.deepEqual(userQuit({
         nick: 'Sex_King',
+        channels: ['#bdsmdungeon']
     }), {
         type: USER_QUIT,
         nick: 'Sex_King',
+        channels: ['#bdsmdungeon']
     });
 });
 

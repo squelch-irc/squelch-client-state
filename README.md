@@ -47,3 +47,14 @@ const {
 If you need to manually call the actions, you can access the action types and creators in `actions`. See [actions.js](/src/actions.js) for all available actions.
 
 TODO: document actions
+
+# Extended squelch-client functionality
+
+This plugin adds a few things to squelch-client for convenience.
+
+## Events
+
+### `quit`
+Event Properties: `{nick, reason, channels}`
+
+A new **channels** property will be added to the quit event emitted by the client. It is an array of the channels that the user who quit was known to be in before they quit.

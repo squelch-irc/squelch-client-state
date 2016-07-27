@@ -31,6 +31,15 @@ module.exports = (store, getState = store => store.getState()) => {
     }
 
     return (client) => {
+        client._.internalEmitter.on('quit', e => {
+            // Add channels the user was in to the event object
+            const { channels } = getState(store);
+            const leftChannels = Object.keys(channels).filter(ch => {
+                return channels[ch].users[e.nick] !== undefined;
+            });
+            e.channels = leftChannels;
+        });
+
         client.on('topic', e => store.dispatch(setTopic(e)));
         client.on('topicwho', e => store.dispatch(setTopicWho(e)));
         client.on('names', e => store.dispatch(updateNames(e)));

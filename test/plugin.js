@@ -8,7 +8,6 @@ const {
     updateNames,
     userJoin,
     userLeave,
-    userQuit,
     addChannelMode,
     removeChannelMode,
     setISupport,
@@ -32,7 +31,19 @@ const makeStore = () => {
 };
 
 const makeClient = () => {
-    return new EventEmitter();
+    const client = new EventEmitter();
+    client._ = {
+        internalEmitter: new EventEmitter()
+    };
+
+    const oldEmit = client.emit;
+    client.emit = function(...args) {
+        if(args[0] !== 'error')
+            this._.internalEmitter.emit(...args);
+        oldEmit.apply(this, args);
+    };
+
+    return client;
 };
 
 const setup = () => {
@@ -102,11 +113,28 @@ test('kick', t => {
 
 test('quit', t => {
     const { store, client } = setup();
+    store.getState = () => {
+        return {
+            channels: {
+                '#bdsmdungeon': {
+                    joined: true,
+                    topic: '',
+                    topicwho: '',
+                    topictime: null,
+                    mode: [],
+                    users: { PleasureKevin: '' }
+                }
+            }
+        };
+    };
 
+    client.on('quit', ({ nick, channels }) => {
+        t.is(nick, 'PleasureKevin');
+        t.deepEqual(channels, ['#bdsmdungeon']);
+    });
     const e = { nick: 'PleasureKevin' };
     client.emit('quit', e);
-
-    t.deepEqual(store.actions[0], userQuit(e));
+    t.deepEqual(e.channels, ['#bdsmdungeon']);
 });
 
 test('+mode', t => {
@@ -183,16 +211,9 @@ test('iSupport', t => {
 });
 
 test('getState for substate', t => {
-    const store = {
-        actions: [],
-        dispatch(action) {
-            this.actions.push(action);
-        },
-        getState() {
-            // client is now a substate
-            return { client: { iSupport: { PREFIX: { o: '@', v: '+' } } } };
-        }
-    };
+    // Client is now a substate
+    const store = makeStore();
+    store.getState = () => { return { client: { iSupport: { PREFIX: { o: '@', v: '+' } } } }; };
     const getState = (store) => store.getState().client;
     const client = makeClient();
     // Test if overriding getState properly returns the correct substate for the plugin
