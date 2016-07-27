@@ -1,4 +1,4 @@
-# squelch-client-state [![Build Status](https://travis-ci.org/rahatarmanahmed/squelch-client-state.svg?branch=master)](https://travis-ci.org/rahatarmanahmed/squelch-client-state)
+# squelch-client-state [![Build Status](https://travis-ci.org/rahatarmanahmed/squelch-client-state.svg?branch=master)](https://travis-ci.org/rahatarmanahmed/squelch-client-state) [![Coverage Status](https://coveralls.io/repos/github/squelch-irc/squelch-client-state/badge.svg?branch=master)](https://coveralls.io/github/squelch-irc/squelch-client-state?branch=master)
 A Redux reducer + state for squelch-client. This keeps track of the data for the channels that squelch-client joins, including the topic, mode, and users.
 
 A plugin for squelch-client is also available to automatically hook into the client and automatically dispatch actions for events as they happen.
