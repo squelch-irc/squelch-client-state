@@ -181,3 +181,30 @@ test('iSupport', t => {
 
     t.deepEqual(store.actions[0], setISupport(e));
 });
+
+test('getState for substate', t => {
+    const store = {
+        actions: [],
+        dispatch(action) {
+            this.actions.push(action);
+        },
+        getState() {
+            // client is now a substate
+            return { client: { iSupport: { PREFIX: { o: '@', v: '+' } } } };
+        }
+    };
+    const getState = (store) => store.getState().client;
+    const client = makeClient();
+    // Test if overriding getState properly returns the correct substate for the plugin
+    Plugin(store, getState)(client);
+
+    let e = { chan: '#bdsmdungeon', sender: 'Hotpriest', mode: 'o', param: 'PleasureKevin' };
+    client.emit('+mode', e);
+
+    e = { chan: '#bdsmdungeon', sender: 'Hotpriest', mode: 'o', param: 'PleasureKevin' };
+    client.emit('-mode', e);
+
+
+    t.deepEqual(store.actions[0], addChannelMode(store.getState().client, e));
+    t.deepEqual(store.actions[1], removeChannelMode(store.getState().client, e));
+});

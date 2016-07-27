@@ -15,9 +15,21 @@ const { reducer, plugin, actions } = require('squelch-client-state');
 // Create a squelch-client
 const client = new Client({/* squelch-client config*/})
 
-// Pass in a redux store using the reducer. You may pass in any store as long
-// as it passes actions down to squelch-client-state's reducer as a subreducer.
-client.use(plugin(createStore(reducer)))
+// Pass in a redux store using the reducer.
+const store = createStore(reducer)
+client.use(plugin(store))
+```
+
+It's likely that your store will not have squelch-client-state's reducer as the root reducer. In that case, you can tell the plugin where the subreducer's state is by passing the optional `getState` argument:
+
+```js
+const store = createStore(composeReducers({
+    // The client reducer is now a subreducer
+    client: reducer
+}))
+// Pass in a function that tells the plugin where to get the state from
+const getState = (store) => store.getState().client
+client.use(plugin(store, getState))
 ```
 
 If you find the names `reducer`, `plugin`, `actions` too generic or conflicting with other variable names, use the ES6 object notation to rename them:

@@ -13,8 +13,19 @@ const {
     disconnect
 } = require('./actions');
 
-
-module.exports = (store) => {
+/**
+ * Plugin for squelch-client-state.
+ * @param  {Store} store        The redux store to send dispatches to
+ * @param  {Function} getState  A function that returns the state corresponding
+ *                              to the squelch-client-state reducer. This
+ *                              defaults to returning the root state. If your
+ *                              state object has the client reducer as a
+ *                              subreducer, pass in a getState function that
+ *                              returns the correct substate. The function will
+ *                              be passed the store as its only argument.
+ * @return {Function}           The plugin function to be used with client.use()
+ */
+module.exports = (store, getState = store => store.getState()) => {
     if(!store) {
         throw new Error('Cannot create state plugin without a redux store.');
     }
@@ -27,8 +38,8 @@ module.exports = (store) => {
         client.on('part', e => store.dispatch(userLeave(e)));
         client.on('kick', e => store.dispatch(userLeave(e)));
         client.on('quit', e => store.dispatch(userQuit(e)));
-        client.on('+mode', e => store.dispatch(addChannelMode(store.getState(), e)));
-        client.on('-mode', e => store.dispatch(removeChannelMode(store.getState(), e)));
+        client.on('+mode', e => store.dispatch(addChannelMode(getState(store), e)));
+        client.on('-mode', e => store.dispatch(removeChannelMode(getState(store), e)));
         client.on('connecting', () => store.dispatch(setConnecting(true)));
         client.on('connect', () => {
             store.dispatch(setConnecting(false));
