@@ -1,5 +1,5 @@
 const omit = require('lodash.omit');
-const mapValues = require('lodash.mapValues');
+const mapValues = require('lodash.mapvalues');
 
 const channel = require('./channelReducer');
 const {
