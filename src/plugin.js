@@ -31,6 +31,7 @@ module.exports = (store, getState = store => store.getState()) => {
     }
 
     return (client) => {
+        // Modify quit event data
         client._.internalEmitter.on('quit', e => {
             // Add channels the user was in to the event object
             const { channels } = getState(store);
@@ -40,6 +41,7 @@ module.exports = (store, getState = store => store.getState()) => {
             e.channels = leftChannels;
         });
 
+        // Register listeners
         client.on('topic', e => store.dispatch(setTopic(e)));
         client.on('topicwho', e => store.dispatch(setTopicWho(e)));
         client.on('names', e => store.dispatch(updateNames(e)));
@@ -60,5 +62,102 @@ module.exports = (store, getState = store => store.getState()) => {
         client.on('raw', (e) => {
             if(e.command == '005') store.dispatch(setISupport(e));
         });
+
+        // Add convenience functions
+
+        /**
+         * Gets the data for a channel in the store.
+         * @param  {String} chan The channel to return data for
+         * @return {Object}      The channel data for chan. See README for what
+         *                       data is available.
+         */
+        // TODO: put state shape in README
+        client.getChannel = function(chan) {
+            return this.getChannels()[chan];
+        };
+
+        /**
+         * Gets the data for all channels in the store.
+         * @return {Object} An object with channel names for keys, and
+         *                  corresponding data object for values.
+         */
+        client.getChannels = function() {
+            return getState(store).channels;
+        };
+
+        /**
+         * Gets the data for all channels the client is currently joined in.
+         * @return {Object} An object with channel names for keys, and
+         *                  corresponding data object for values.
+         */
+        client.getJoinedChannels = function() {
+            const channels = getState(store).channels;
+            const joinedChannels = {};
+            Object.keys(channels).filter(name => channels[name].joined)
+            .forEach(name => joinedChannels[name] = channels[name]);
+            return joinedChannels;
+        };
+
+        /**
+         * Checks if the client is currently joined in a channel.
+         * @param  {String} chan The channel name
+         * @return {Boolean}     True if the client is currently joined in chan
+         */
+        client.isInChannel = function(chan) {
+            const channel = this.getChannel(chan);
+            return !!(channel && channel.joined);
+        };
+
+        /**
+         * Returns the topic of a channel.
+         * @param  {String} chan The channel name
+         * @return {String|null}      The topic of the channel, or null if the
+         *                       channel isn't in the store.
+         */
+        client.getTopic = function(chan) {
+            const channel = this.getChannel(chan);
+            if(!channel) return null;
+            return channel.topic;
+        };
+
+        /**
+         * Returns the modes set in a channel.
+         * @param  {String} chan The channel name
+         * @return {String|null} An array of mode characters set in the channel,
+         *                       or null if the channel isn't in the store.
+         */
+        client.getMode = function(chan) {
+            const channel = this.getChannel(chan);
+            if(!channel) return null;
+            return channel.mode;
+        };
+
+        /**
+         * Returns an array of user nicknames currently joined in a channels
+         * @param  {String} chan The channel name
+         * @return {String[]}    An array of nicknames of users who are currently
+         *                       joined in the channel
+         */
+        client.getUsers = function(chan) {
+            const channel = this.getChannel(chan);
+            if(!channel) return null;
+            return Object.keys(channel.users);
+        };
+
+        /**
+         * Returns the status symbol of the user in the given channel.
+         * @param  {String} chan The channel name
+         * @param  {String} user The user's nicknames
+         * @return {String|null} The status symbol of the user in the channel.
+         *                       If the user is a normal user, then an empty
+         *                       string is returned. If the user is not in the
+         *                       channel or the channel doesn't exist, null is
+         *                       returned.
+         */
+        client.getUserStatus = function(chan, user) {
+            const channel = this.getChannel(chan);
+            if(!channel) return null;
+            return channel.users[user] !== undefined ? channel.users[user] : null;
+        };
     };
 };

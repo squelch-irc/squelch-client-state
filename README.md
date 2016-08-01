@@ -58,3 +58,52 @@ This plugin adds a few things to squelch-client for convenience.
 Event Properties: `{nick, reason, channels}`
 
 A new **channels** property will be added to the quit event emitted by the client. It is an array of the channels that the user who quit was known to be in before they quit.
+
+## Methods
+
+### client.getChannel(chan)
+
+Returns the store data for `chan`. The data will have a shape like this:
+
+```js
+{
+    joined: true,
+    topic: '',
+    topicwho: /* Hostmask of topic setter */,
+    topictime: /* Date of topic set time */,
+    mode: [], // Array of mode characters set on the channel
+    users: {
+        nickname: '',
+        oppedNick: '@',
+        voicedNick: '+'
+    }
+}
+```
+
+### `client.getChannels()`
+
+Returns an object with channel names for keys, and values from `getChannel(chan)` from above.
+
+### `client.getJoinedChannels()`
+
+Same as `getChannels()`, but filtered by channels that are currently joined.
+
+### `client.isInChannel(chan)`
+
+Returns true if the client is currently joined in the `chan`.
+
+### `client.getTopic(chan)`
+
+Returns the topic of the channel. Returns null if the channel doesn't exist in the store.
+
+### `client.getMode(chan)`
+
+Returns an array of mode characters set on the channel. Returns null if the channel doesn't exist in the store.
+
+### `client.getUsers(chan)`
+
+Returns an array of the nicknames who are currently joined in `chan`.
+
+### `client.getUserStatus(chan, nick)`
+
+Returns the status string of user `nick` in `chan`, like `@`, `+`, or the empty string if the user is a normal user. Returns null if the user isn't in the channel or the channel doesn't exist in the store.

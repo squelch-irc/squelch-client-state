@@ -229,3 +229,118 @@ test('getState for substate', t => {
     t.deepEqual(store.actions[0], addChannelMode(store.getState().client, e));
     t.deepEqual(store.actions[1], removeChannelMode(store.getState().client, e));
 });
+
+// Test convenience functions
+const presetState = {
+    channels: {
+        '#bdsmdungeon': {
+            joined: true,
+            topic: 'AnalDawg Funeral this Sunday @ 9AM',
+            topicwho: '~Hotpriest@irc.somethingawful.com',
+            topictime: new Date(),
+            mode: ['n', 'p', 't'],
+            users: {
+                Hotpriest: '@',
+                Sex_King: '',
+                misterarson_: '',
+                PATRIOT1959: '',
+                PleasureKevin: '+',
+                malediapered: '',
+                DISABLEDMAN: '',
+                BaseballTrivia: ''
+            }
+        },
+        '#furry': {
+            joined: false,
+            topic: '',
+            topicwho: '',
+            topictime: null,
+            mode: [],
+            users: {}
+        }
+    }
+};
+
+const getPresetState = () => {
+    return presetState;
+};
+
+const setupPresetClient = () => {
+    const client = makeClient();
+    Plugin({}, getPresetState)(client);
+    return client;
+};
+
+test('getChannel', t => {
+    const client = setupPresetClient();
+
+    t.is(client.getChannel('#bdsmdungeon'), presetState.channels['#bdsmdungeon']);
+    t.is(client.getChannel('#furry'), presetState.channels['#furry']);
+});
+
+test('getChannels', t => {
+    const client = setupPresetClient();
+
+    t.is(client.getChannels(), presetState.channels);
+});
+
+test('getJoinedChannels', t => {
+    const client = setupPresetClient();
+
+    t.deepEqual(client.getJoinedChannels(), {
+        '#bdsmdungeon': presetState.channels['#bdsmdungeon']
+    });
+});
+
+test('isInChannel', t => {
+    const client = setupPresetClient();
+
+    t.true(client.isInChannel('#bdsmdungeon'));
+    t.false(client.isInChannel('#furry'));
+    t.false(client.isInChannel('#somenonexistentchannel'));
+});
+
+test('getTopic', t => {
+    const client = setupPresetClient();
+
+    t.is(client.getTopic('#bdsmdungeon'), 'AnalDawg Funeral this Sunday @ 9AM');
+    t.is(client.getTopic('#furry'), '');
+    t.is(client.getTopic('#somenonexistent'), null);
+});
+
+test('getMode', t => {
+    const client = setupPresetClient();
+
+    t.deepEqual(client.getMode('#bdsmdungeon'), ['n', 'p', 't']);
+    t.deepEqual(client.getMode('#furry'), []);
+    t.is(client.getMode('#somenonexistent'), null);
+});
+
+test('getUsers', t => {
+    const client = setupPresetClient();
+
+    t.deepEqual(client.getUsers('#bdsmdungeon'), [
+        'Hotpriest',
+        'Sex_King',
+        'misterarson_',
+        'PATRIOT1959',
+        'PleasureKevin',
+        'malediapered',
+        'DISABLEDMAN',
+        'BaseballTrivia'
+    ]);
+    t.deepEqual(client.getUsers('#furry'), []);
+    t.deepEqual(client.getUsers('#nowhere'), null);
+});
+
+test('getUserStatus', t => {
+    const client = setupPresetClient();
+
+    t.is(client.getUserStatus('#bdsmdungeon', 'Hotpriest'), '@');
+    t.is(client.getUserStatus('#bdsmdungeon', 'PleasureKevin'), '+');
+    t.is(client.getUserStatus('#bdsmdungeon', 'DISABLEDMAN'), '');
+
+    t.is(client.getUserStatus('#furry', 'nobody'), null);
+
+    t.is(client.getUserStatus('#nowhere', 'nobody'), null);
+});
