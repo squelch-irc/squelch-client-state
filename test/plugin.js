@@ -208,6 +208,12 @@ test('iSupport', t => {
     client.emit('raw', e);
 
     t.deepEqual(store.actions[0], setISupport(e));
+
+    const e2 = { ...e, command: '420' };
+    client.emit('raw', e2);
+
+    // Should not have emitted an action
+    t.is(store.actions.length, 1);
 });
 
 test('getState for substate', t => {
