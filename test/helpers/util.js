@@ -20,7 +20,7 @@ const defaultState = {
         CHANMODES: ['beI', 'k', 'l', 'aimnpqsrt']
 
     },
-    channels: []
+    channels: {}
 };
 
 // Channel reducer helpers

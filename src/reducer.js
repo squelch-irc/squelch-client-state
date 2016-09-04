@@ -24,7 +24,7 @@ module.exports = (state, action) => {
                 CHANTYPES: '&#',
                 CHANMODES: ['beI', 'k', 'l', 'aimnpqsrt']
             },
-            channels: []
+            channels: {}
         };
     }
     switch(action.type) {
