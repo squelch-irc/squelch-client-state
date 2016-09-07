@@ -1,7 +1,7 @@
 {
   "name": "squelch-client-state",
   "description": "A Redux reducer + state for squelch-client",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "license": "MIT",
   "main": "lib/index.js",
   "author": "Rahat Ahmed",
