@@ -5,7 +5,7 @@
   "license": "MIT",
   "main": "lib/index.js",
   "author": "Rahat Ahmed",
-  "repository": "rahatarmanahmed/squelch-client-state",
+  "repository": "squelch-irc/squelch-client-state",
   "scripts": {
     "lint": "eslint src/ test/",
     "test": "nyc ava -r babel-register test/",
