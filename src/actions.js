@@ -1,5 +1,5 @@
 module.exports = {
-    SET_TOPIC: 'SET_TOPIC',
+    SET_TOPIC: 'squelch-client-state/SET_TOPIC',
 
     /**
      * Action creator for setting the topic
@@ -12,7 +12,7 @@ module.exports = {
         };
     },
 
-    SET_TOPIC_WHO: 'SET_TOPIC_WHO',
+    SET_TOPIC_WHO: 'squelch-client-state/SET_TOPIC_WHO',
 
     /**
      * Action creator for setting the topic who and time
@@ -26,7 +26,7 @@ module.exports = {
         };
     },
 
-    UPDATE_NAMES: 'UPDATE_NAMES',
+    UPDATE_NAMES: 'squelch-client-state/UPDATE_NAMES',
 
     /**
      * Action creator for updating channel users from NAMES reply.
@@ -39,7 +39,7 @@ module.exports = {
         };
     },
 
-    USER_JOIN: 'USER_JOIN',
+    USER_JOIN: 'squelch-client-state/USER_JOIN',
 
     /**
      * Action creator for a user joining a channel.
@@ -53,7 +53,7 @@ module.exports = {
         };
     },
 
-    USER_LEAVE: 'USER_LEAVE',
+    USER_LEAVE: 'squelch-client-state/USER_LEAVE',
 
     /**
      * Action creator for a user leaving a channel.
@@ -67,7 +67,7 @@ module.exports = {
         };
     },
 
-    USER_QUIT: 'USER_QUIT',
+    USER_QUIT: 'squelch-client-state/USER_QUIT',
 
     /**
      * Action creator for a user quitting a channel.
@@ -80,7 +80,7 @@ module.exports = {
         };
     },
 
-    ADD_CHANNEL_MODE: 'ADD_CHANNEL_MODE',
+    ADD_CHANNEL_MODE: 'squelch-client-state/ADD_CHANNEL_MODE',
 
     /**
      * Action creator for adding a mode to a channel.
@@ -97,7 +97,7 @@ module.exports = {
         };
     },
 
-    REMOVE_CHANNEL_MODE: 'REMOVE_CHANNEL_MODE',
+    REMOVE_CHANNEL_MODE: 'squelch-client-state/REMOVE_CHANNEL_MODE',
 
     /**
      * Action creator for removing a mode to a channel.
@@ -114,7 +114,7 @@ module.exports = {
         };
     },
 
-    REMOVE_CHANNEL: 'REMOVE_CHANNEL',
+    REMOVE_CHANNEL: 'squelch-client-state/REMOVE_CHANNEL',
 
     /**
      * Action creator for removing the data for a channel.
@@ -126,7 +126,7 @@ module.exports = {
         };
     },
 
-    SET_ISUPPORT: 'SET_ISUPPORT',
+    SET_ISUPPORT: 'squelch-client-state/SET_ISUPPORT',
 
     /**
      * Action creator for a updating iSupport values.
@@ -167,7 +167,7 @@ module.exports = {
         };
     },
 
-    SET_CONNECTED: 'SET_CONNECTED',
+    SET_CONNECTED: 'squelch-client-state/SET_CONNECTED',
 
     /**
      * Action creator for setting the connected status.
@@ -179,7 +179,7 @@ module.exports = {
         };
     },
 
-    SET_CONNECTING: 'SET_CONNECTING',
+    SET_CONNECTING: 'squelch-client-state/SET_CONNECTING',
 
     /**
      * Action creator for setting the connecting status.
@@ -191,7 +191,7 @@ module.exports = {
         };
     },
 
-    CHANGE_NICK: 'CHANGE_NICK',
+    CHANGE_NICK: 'squelch-client-state/CHANGE_NICK',
 
     changeNick({ oldNick, newNick }) {
         return {
@@ -201,7 +201,7 @@ module.exports = {
         };
     },
 
-    DISCONNECT: 'DISCONNECT',
+    DISCONNECT: 'squelch-client-state/DISCONNECT',
 
     disconnect() {
         return {
