@@ -23,7 +23,7 @@ client.use(plugin(store))
 It's likely that your store will not have squelch-client-state's reducer as the root reducer. In that case, you can tell the plugin where the subreducer's state is by passing the optional `getState` argument:
 
 ```js
-const store = createStore(composeReducers({
+const store = createStore(combineReducers({
     // The client reducer is now a subreducer
     client: reducer
 }))
