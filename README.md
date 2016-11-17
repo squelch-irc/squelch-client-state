@@ -46,6 +46,8 @@ const {
 
 If you need to manually call the actions, you can access the action types and creators in `actions`. See [actions.js](/src/actions.js) for all available actions.
 
+Furthermore, all actions have an `id` property in their payload that correspond to the specific instance of squelch-client event that it was created from. This is useful if you are managing multiple client reducers, and need to know which client an action is for.
+
 TODO: document actions
 
 # Extended squelch-client functionality

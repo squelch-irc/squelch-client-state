@@ -35,8 +35,10 @@ const {
 
 test('removeChannel', t => {
   t.deepEqual(removeChannel({
+    id: 123,
     chan: '#bdsmdungeon'
   }), {
+    id: 123,
     type: REMOVE_CHANNEL,
     chan: '#bdsmdungeon'
   })
@@ -44,6 +46,7 @@ test('removeChannel', t => {
 
 test('setISupport', t => {
   t.deepEqual(setISupport({
+    id: 123,
     params: [
       'Hotpriest',
       'CHANTYPES=#',
@@ -61,6 +64,7 @@ test('setISupport', t => {
       'are supported by this server'
     ]
   }), {
+    id: 123,
     type: SET_ISUPPORT,
     iSupport: {
       CHANTYPES: '#',
@@ -83,14 +87,22 @@ test('setISupport', t => {
 })
 
 test('setConnected', t => {
-  t.deepEqual(setConnected(true), {
+  t.deepEqual(setConnected({
+    id: 123,
+    connected: true
+  }), {
+    id: 123,
     type: SET_CONNECTED,
     connected: true
   })
 })
 
 test('setConnecting', t => {
-  t.deepEqual(setConnecting(false), {
+  t.deepEqual(setConnecting({
+    id: 123,
+    connecting: false
+  }), {
+    id: 123,
     type: SET_CONNECTING,
     connecting: false
   })
@@ -98,9 +110,11 @@ test('setConnecting', t => {
 
 test('setTopic', t => {
   t.deepEqual(setTopic({
+    id: 123,
     chan: '#bdsmdungeon',
     topic: 'AnalDawg Funeral this Sunday @ 9AM'
   }), {
+    id: 123,
     type: SET_TOPIC,
     chan: '#bdsmdungeon',
     topic: 'AnalDawg Funeral this Sunday @ 9AM'
@@ -110,10 +124,12 @@ test('setTopic', t => {
 test('setTopicWho', t => {
   const timestamp = new Date()
   t.deepEqual(setTopicWho({
+    id: 123,
     chan: '#bdsmdungeon',
     hostmask: 'Hotpriest',
     time: timestamp
   }), {
+    id: 123,
     type: SET_TOPIC_WHO,
     chan: '#bdsmdungeon',
     hostmask: 'Hotpriest',
@@ -133,9 +149,11 @@ test('updateNames', t => {
     BaseballTrivia: ''
   }
   t.deepEqual(updateNames({
+    id: 123,
     chan: '#bdsmdungeon',
     names
   }), {
+    id: 123,
     type: UPDATE_NAMES,
     chan: '#bdsmdungeon',
     names
@@ -144,10 +162,12 @@ test('updateNames', t => {
 
 test('userJoin', t => {
   t.deepEqual(userJoin({
+    id: 123,
     nick: 'AnalDawg',
     chan: '#bdsmdungeon',
     me: false
   }), {
+    id: 123,
     type: USER_JOIN,
     nick: 'AnalDawg',
     chan: '#bdsmdungeon',
@@ -157,10 +177,12 @@ test('userJoin', t => {
 
 test('userLeave', t => {
   t.deepEqual(userLeave({
+    id: 123,
     nick: 'BigHoleWoman',
     chan: '#bdsmdungeon',
     me: false
   }), {
+    id: 123,
     type: USER_LEAVE,
     nick: 'BigHoleWoman',
     chan: '#bdsmdungeon',
@@ -170,9 +192,11 @@ test('userLeave', t => {
 
 test('userQuit', t => {
   t.deepEqual(userQuit({
+    id: 123,
     nick: 'Sex_King',
     channels: ['#bdsmdungeon']
   }), {
+    id: 123,
     type: USER_QUIT,
     nick: 'Sex_King',
     channels: ['#bdsmdungeon']
@@ -181,9 +205,11 @@ test('userQuit', t => {
 
 test('changeNick', t => {
   t.deepEqual(changeNick({
+    id: 123,
     oldNick: 'Sex_King',
     newNick: 'PleasureKevin'
   }), {
+    id: 123,
     type: CHANGE_NICK,
     oldNick: 'Sex_King',
     newNick: 'PleasureKevin'
@@ -200,10 +226,12 @@ test('addChannelMode', t => {
   }
 
   t.deepEqual(addChannelMode(state, {
+    id: 123,
     chan: '#bdsmdungeon',
     mode: 'o',
     param: 'PleasureKevin'
   }), {
+    id: 123,
     type: ADD_CHANNEL_MODE,
     chan: '#bdsmdungeon',
     mode: 'o',
@@ -212,10 +240,12 @@ test('addChannelMode', t => {
   })
 
   t.deepEqual(addChannelMode(state, {
+    id: 123,
     chan: '#bdsmdungeon',
     mode: 'c',
     param: ''
   }), {
+    id: 123,
     type: ADD_CHANNEL_MODE,
     chan: '#bdsmdungeon',
     mode: 'c',
@@ -234,10 +264,12 @@ test('removeChannelMode', t => {
   }
 
   t.deepEqual(removeChannelMode(state, {
+    id: 123,
     chan: '#bdsmdungeon',
     mode: 'o',
     param: 'AnalDawg'
   }), {
+    id: 123,
     type: REMOVE_CHANNEL_MODE,
     chan: '#bdsmdungeon',
     mode: 'o',
@@ -246,10 +278,12 @@ test('removeChannelMode', t => {
   })
 
   t.deepEqual(removeChannelMode(state, {
+    id: 123,
     chan: '#bdsmdungeon',
     mode: 'c',
     param: ''
   }), {
+    id: 123,
     type: REMOVE_CHANNEL_MODE,
     chan: '#bdsmdungeon',
     mode: 'c',
@@ -259,7 +293,8 @@ test('removeChannelMode', t => {
 })
 
 test('disconnect', t => {
-  t.deepEqual(disconnect(), {
+  t.deepEqual(disconnect({ id: 123 }), {
+    id: 123,
     type: DISCONNECT
   })
 })

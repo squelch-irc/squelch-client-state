@@ -27,20 +27,20 @@ test('initial state', t => {
 test('setConnected', t => {
   const store = makeStore()
 
-  store.dispatch(setConnected(true))
+  store.dispatch(setConnected({ id: 123, connected: true }))
   t.true(store.getState().connected)
 
-  store.dispatch(setConnected(false))
+  store.dispatch(setConnected({ id: 123, connected: false }))
   t.false(store.getState().connected)
 })
 
 test('setConnecting', t => {
   const store = makeStore()
 
-  store.dispatch(setConnecting(true))
+  store.dispatch(setConnecting({ id: 123, connecting: true }))
   t.true(store.getState().connecting)
 
-  store.dispatch(setConnecting(false))
+  store.dispatch(setConnecting({ id: 123, connecting: false }))
   t.false(store.getState().connecting)
 })
 
@@ -49,6 +49,7 @@ test('userJoin', t => {
 
     // Own client joining new channel
   store.dispatch(userJoin({
+    id: 123,
     nick: 'PATRIOT1959',
     chan: '#bdsmdungeon',
     me: true
@@ -64,6 +65,7 @@ test('userJoin', t => {
 
     // Other user joining existing channel
   store.dispatch(userJoin({
+    id: 123,
     nick: 'BaseballTrivia',
     chan: '#bdsmdungeon',
     me: false
@@ -94,6 +96,7 @@ test('removeChannel', t => {
   })
 
   store.dispatch(removeChannel({
+    id: 123,
     chan: '#bdsmdungeon'
   }))
   t.deepEqual(store.getState().channels, {})
@@ -116,6 +119,7 @@ test('removeChannel throws if still joined', t => {
 
     // Own client joining new channel
   t.throws(() => store.dispatch(removeChannel({
+    id: 123,
     chan: '#bdsmdungeon'
   })))
 })
@@ -124,6 +128,7 @@ test('iSupport', t => {
   const store = makeStore({ connected: true })
 
   store.dispatch(setISupport({
+    id: 123,
     params: [
       'Hotpriest',
       'CHANTYPES=#',
@@ -183,7 +188,7 @@ test('disconnect', t => {
     }
   })
 
-  store.dispatch(disconnect())
+  store.dispatch(disconnect({ id: 123 }))
   const { channels, connected, connecting } = store.getState()
   t.false(connected)
   t.false(connecting)

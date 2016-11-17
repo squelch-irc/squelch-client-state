@@ -58,7 +58,7 @@ test('throw without store', t => {
 test('topic', t => {
   const { store, client } = setup()
 
-  const e = { chan: '#bdsmdungeon', topic: 'RIP AnalDawg' }
+  const e = { id: 123, chan: '#bdsmdungeon', topic: 'RIP AnalDawg' }
   client.emit('topic', e)
 
   t.deepEqual(store.actions[0], setTopic(e))
@@ -67,7 +67,7 @@ test('topic', t => {
 test('topicwho', t => {
   const { store, client } = setup()
 
-  const e = { chan: '#bdsmdungeon', hostmask: 'whatever', time: new Date() }
+  const e = { id: 123, chan: '#bdsmdungeon', hostmask: 'whatever', time: new Date() }
   client.emit('topicwho', e)
 
   t.deepEqual(store.actions[0], setTopicWho(e))
@@ -76,7 +76,7 @@ test('topicwho', t => {
 test('names', t => {
   const { store, client } = setup()
 
-  const e = { chan: '#bdsmdungeon', names: { AnalDawg: '@', PleasureKevin: '' } }
+  const e = { id: 123, chan: '#bdsmdungeon', names: { AnalDawg: '@', PleasureKevin: '' } }
   client.emit('names', e)
 
   t.deepEqual(store.actions[0], updateNames(e))
@@ -85,7 +85,7 @@ test('names', t => {
 test('join', t => {
   const { store, client } = setup()
 
-  const e = { chan: '#bdsmdungeon', nick: 'PleasureKevin', me: false }
+  const e = { id: 123, chan: '#bdsmdungeon', nick: 'PleasureKevin', me: false }
   client.emit('join', e)
 
   t.deepEqual(store.actions[0], userJoin(e))
@@ -94,7 +94,7 @@ test('join', t => {
 test('part', t => {
   const { store, client } = setup()
 
-  const e = { chan: '#bdsmdungeon', nick: 'PleasureKevin', me: false }
+  const e = { id: 123, chan: '#bdsmdungeon', nick: 'PleasureKevin', me: false }
   client.emit('part', e)
 
   t.deepEqual(store.actions[0], userLeave(e))
@@ -103,7 +103,7 @@ test('part', t => {
 test('kick', t => {
   const { store, client } = setup()
 
-  const e = { chan: '#bdsmdungeon', nick: 'PleasureKevin', kicker: 'Hotpriest', reason: '', me: false }
+  const e = { id: 123, chan: '#bdsmdungeon', nick: 'PleasureKevin', kicker: 'Hotpriest', reason: '', me: false }
   client.emit('kick', e)
 
   t.deepEqual(store.actions[0], userLeave(e))
@@ -130,7 +130,7 @@ test('quit', t => {
     t.is(nick, 'PleasureKevin')
     t.deepEqual(channels, ['#bdsmdungeon'])
   })
-  const e = { nick: 'PleasureKevin' }
+  const e = { id: 123, nick: 'PleasureKevin' }
   client.emit('quit', e)
   t.deepEqual(e.channels, ['#bdsmdungeon'])
 })
@@ -138,7 +138,7 @@ test('quit', t => {
 test('+mode', t => {
   const { store, client } = setup()
 
-  const e = { chan: '#bdsmdungeon', sender: 'Hotpriest', mode: 'o', param: 'PleasureKevin' }
+  const e = { id: 123, chan: '#bdsmdungeon', sender: 'Hotpriest', mode: 'o', param: 'PleasureKevin' }
   client.emit('+mode', e)
 
   t.deepEqual(store.actions[0], addChannelMode(store.getState(), e))
@@ -147,7 +147,7 @@ test('+mode', t => {
 test('-mode', t => {
   const { store, client } = setup()
 
-  const e = { chan: '#bdsmdungeon', sender: 'Hotpriest', mode: 'o', param: 'PleasureKevin' }
+  const e = { id: 123, chan: '#bdsmdungeon', sender: 'Hotpriest', mode: 'o', param: 'PleasureKevin' }
   client.emit('-mode', e)
 
   t.deepEqual(store.actions[0], removeChannelMode(store.getState(), e))
@@ -156,35 +156,36 @@ test('-mode', t => {
 test('connecting', t => {
   const { store, client } = setup()
 
-  const e = { server: 'irc.somethingawful.com', port: 6667 }
+  const e = { id: 123, server: 'irc.somethingawful.com', port: 6667 }
   client.emit('connecting', e)
 
-  t.deepEqual(store.actions[0], setConnecting(true))
+  t.deepEqual(store.actions[0], setConnecting({ id: 123, connecting: true }))
 })
 
 test('connect', t => {
   const { store, client } = setup()
 
-  const e = { nick: 'Hotpriest', server: 'irc.somethingawful.com', port: 6667 }
+  const e = { id: 123, nick: 'Hotpriest', server: 'irc.somethingawful.com', port: 6667 }
   client.emit('connect', e)
 
-  t.deepEqual(store.actions[0], setConnecting(false))
-  t.deepEqual(store.actions[1], setConnected(true))
+  t.deepEqual(store.actions[0], setConnecting({ id: 123, connecting: false }))
+  t.deepEqual(store.actions[1], setConnected({ id: 123, connected: true }))
 })
 
 test('disconnect', t => {
   const { store, client } = setup()
 
-  const e = { reason: 'No reason at all.' }
+  const e = { id: 123, reason: 'No reason at all.' }
   client.emit('disconnect', e)
 
-  t.deepEqual(store.actions[0], disconnect())
+  t.deepEqual(store.actions[0], disconnect(e))
 })
 
 test('iSupport', t => {
   const { store, client } = setup()
 
   const e = {
+    id: 123,
     command: '005',
     params: [
       'Hotpriest',
@@ -223,10 +224,10 @@ test('getState for substate', t => {
     // Test if overriding getState properly returns the correct substate for the plugin
   Plugin(store, getState)(client)
 
-  let e = { chan: '#bdsmdungeon', sender: 'Hotpriest', mode: 'o', param: 'PleasureKevin' }
+  let e = { id: 123, chan: '#bdsmdungeon', sender: 'Hotpriest', mode: 'o', param: 'PleasureKevin' }
   client.emit('+mode', e)
 
-  e = { chan: '#bdsmdungeon', sender: 'Hotpriest', mode: 'o', param: 'PleasureKevin' }
+  e = { id: 123, chan: '#bdsmdungeon', sender: 'Hotpriest', mode: 'o', param: 'PleasureKevin' }
   client.emit('-mode', e)
 
   t.deepEqual(store.actions[0], addChannelMode(store.getState().client, e))

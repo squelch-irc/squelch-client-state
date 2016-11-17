@@ -4,8 +4,9 @@ module.exports = {
   /**
    * Action creator for setting the topic
    */
-  setTopic ({ chan, topic }) {
+  setTopic ({ id, chan, topic }) {
     return {
+      id,
       type: module.exports.SET_TOPIC,
       chan,
       topic
@@ -17,8 +18,9 @@ module.exports = {
   /**
    * Action creator for setting the topic who and time
    */
-  setTopicWho ({ chan, hostmask, time }) {
+  setTopicWho ({ id, chan, hostmask, time }) {
     return {
+      id,
       type: module.exports.SET_TOPIC_WHO,
       chan,
       hostmask,
@@ -31,8 +33,9 @@ module.exports = {
   /**
    * Action creator for updating channel users from NAMES reply.
    */
-  updateNames ({ chan, names }) {
+  updateNames ({ id, chan, names }) {
     return {
+      id,
       type: module.exports.UPDATE_NAMES,
       chan,
       names
@@ -44,8 +47,9 @@ module.exports = {
   /**
    * Action creator for a user joining a channel.
    */
-  userJoin ({ chan, nick, me }) {
+  userJoin ({ id, chan, nick, me }) {
     return {
+      id,
       type: module.exports.USER_JOIN,
       chan,
       nick,
@@ -58,8 +62,9 @@ module.exports = {
   /**
    * Action creator for a user leaving a channel.
    */
-  userLeave ({ chan, nick, me }) {
+  userLeave ({ id, chan, nick, me }) {
     return {
+      id,
       type: module.exports.USER_LEAVE,
       chan,
       nick,
@@ -72,8 +77,9 @@ module.exports = {
   /**
    * Action creator for a user quitting a channel.
    */
-  userQuit ({ nick, channels }) {
+  userQuit ({ id, nick, channels }) {
     return {
+      id,
       type: module.exports.USER_QUIT,
       nick,
       channels
@@ -87,8 +93,9 @@ module.exports = {
    * @param {Object} state The current state
    * @param {Object} e The +mode event object from squelch-client
    */
-  addChannelMode (state, { chan, mode, param }) {
+  addChannelMode (state, { id, chan, mode, param }) {
     return {
+      id,
       type: module.exports.ADD_CHANNEL_MODE,
       prefix: state.iSupport['PREFIX'][mode] || undefined,
       chan,
@@ -104,8 +111,9 @@ module.exports = {
    * @param {Object} state The current state
    * @param {Object} e The -mode event object from squelch-client
    */
-  removeChannelMode (state, { chan, mode, param }) {
+  removeChannelMode (state, { id, chan, mode, param }) {
     return {
+      id,
       type: module.exports.REMOVE_CHANNEL_MODE,
       prefix: state.iSupport['PREFIX'][mode] || undefined,
       chan,
@@ -119,8 +127,9 @@ module.exports = {
   /**
    * Action creator for removing the data for a channel.
    */
-  removeChannel ({ chan }) {
+  removeChannel ({ id, chan }) {
     return {
+      id,
       type: module.exports.REMOVE_CHANNEL,
       chan
     }
@@ -132,7 +141,7 @@ module.exports = {
    * Action creator for a updating iSupport values.
    * Accepts parsed reply from squelch-client raw event
    */
-  setISupport ({ params }) {
+  setISupport ({ id, params }) {
     const iSupport = {}
     for (const item of params.slice(1)) {
       // Skip the last param, which is usually something like
@@ -159,6 +168,7 @@ module.exports = {
     }
 
     return {
+      id,
       type: module.exports.SET_ISUPPORT,
       iSupport
     }
@@ -169,8 +179,9 @@ module.exports = {
   /**
    * Action creator for setting the connected status.
    */
-  setConnected (connected) {
+  setConnected ({ id, connected }) {
     return {
+      id,
       type: module.exports.SET_CONNECTED,
       connected
     }
@@ -181,8 +192,9 @@ module.exports = {
   /**
    * Action creator for setting the connecting status.
    */
-  setConnecting (connecting) {
+  setConnecting ({ id, connecting }) {
     return {
+      id,
       type: module.exports.SET_CONNECTING,
       connecting
     }
@@ -190,8 +202,9 @@ module.exports = {
 
   CHANGE_NICK: 'squelch-client-state/CHANGE_NICK',
 
-  changeNick ({ oldNick, newNick }) {
+  changeNick ({ id, oldNick, newNick }) {
     return {
+      id,
       type: module.exports.CHANGE_NICK,
       oldNick,
       newNick
@@ -200,8 +213,9 @@ module.exports = {
 
   DISCONNECT: 'squelch-client-state/DISCONNECT',
 
-  disconnect () {
+  disconnect ({ id }) {
     return {
+      id,
       type: module.exports.DISCONNECT
     }
   }
