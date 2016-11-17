@@ -53,7 +53,7 @@ test('unrecognized action', t => {
 test('initial state/userJoin', t => {
   const store = makeStore()
 
-  store.dispatch(userJoin({ chan: '#bdsmdungeon', nick: 'BaseballTrivia', me: true }))
+  store.dispatch(userJoin({ id: 123, chan: '#bdsmdungeon', nick: 'BaseballTrivia', me: true }))
 
   t.deepEqual(store.getState(), { ...defaultState, users: { BaseballTrivia: '' } })
 })
@@ -61,7 +61,7 @@ test('initial state/userJoin', t => {
 test('userJoin (other user)', t => {
   const store = makePresetStore()
 
-  store.dispatch(userJoin({ chan: '#bdsmdungeon', nick: 'spambot2000', me: false }))
+  store.dispatch(userJoin({ id: 123, chan: '#bdsmdungeon', nick: 'spambot2000', me: false }))
 
   t.is(store.getState().users.spambot2000, '')
 })
@@ -69,7 +69,7 @@ test('userJoin (other user)', t => {
 test('userLeave (self)', t => {
   const store = makePresetStore()
 
-  store.dispatch(userLeave({ chan: '#bdsmdungeon', nick: 'BaseballTrivia', me: true }))
+  store.dispatch(userLeave({ id: 123, chan: '#bdsmdungeon', nick: 'BaseballTrivia', me: true }))
 
   const { joined, topic, topicwho, topictime, mode, users } = store.getState()
   t.false(joined)
@@ -83,7 +83,7 @@ test('userLeave (self)', t => {
 test('userLeave (other user)', t => {
   const store = makePresetStore()
 
-  store.dispatch(userLeave({ chan: '#bdsmdungeon', nick: 'PleasureKevin', me: false }))
+  store.dispatch(userLeave({ id: 123, chan: '#bdsmdungeon', nick: 'PleasureKevin', me: false }))
 
   t.is(store.getState().users.PleasureKevin, undefined)
 })
@@ -93,12 +93,12 @@ test('userQuit (other user)', t => {
   const oldState = store.getState()
 
     // User quit that isn't in this channel
-  store.dispatch(userQuit({ nick: 'DarkPleasureKevin' }))
+  store.dispatch(userQuit({ id: 123, nick: 'DarkPleasureKevin' }))
 
   t.is(store.getState(), oldState)
 
     // User quit that is in this channel
-  store.dispatch(userQuit({ nick: 'PleasureKevin' }))
+  store.dispatch(userQuit({ id: 123, nick: 'PleasureKevin' }))
 
   t.is(store.getState().users.PleasureKevin, undefined)
 })
@@ -106,7 +106,7 @@ test('userQuit (other user)', t => {
 test('disconnect', t => {
   const store = makePresetStore()
 
-  store.dispatch(disconnect())
+  store.dispatch(disconnect({ id: 123 }))
 
   const { joined, topic, topicwho, topictime, mode, users } = store.getState()
   t.false(joined)
@@ -120,7 +120,7 @@ test('disconnect', t => {
 test('setTopic', t => {
   const store = makePresetStore()
 
-  store.dispatch(setTopic({ chan: '#bdsmdungeon', topic: 'nno' }))
+  store.dispatch(setTopic({ id: 123, chan: '#bdsmdungeon', topic: 'nno' }))
 
   t.is(store.getState().topic, 'nno')
 })
@@ -129,7 +129,7 @@ test('setTopicWho', t => {
   const store = makePresetStore()
   const timestamp = new Date()
 
-  store.dispatch(setTopicWho({ chan: '#bdsmdungeon', hostmask: '~PleasureKevin@irc.somethingawful.com', time: timestamp }))
+  store.dispatch(setTopicWho({ id: 123, chan: '#bdsmdungeon', hostmask: '~PleasureKevin@irc.somethingawful.com', time: timestamp }))
 
   t.is(store.getState().topicwho, '~PleasureKevin@irc.somethingawful.com')
   t.is(store.getState().topictime, timestamp)
@@ -147,6 +147,7 @@ test('updateNames', t => {
   t.deepEqual(store.getState().users, {})
 
   store.dispatch(updateNames({
+    id: 123,
     chan: '#bdsmdungeon',
     names
   }))
@@ -162,12 +163,12 @@ test('changeNick', t => {
   t.is(oldState.users.PleasureKevin2, undefined)
 
     // Dispatch nicks that didn't change in this channel
-  store.dispatch(changeNick({ oldNick: 'DarkPleasureKevin', newNick: 'DarkPleasureKevin2' }))
+  store.dispatch(changeNick({ id: 123, oldNick: 'DarkPleasureKevin', newNick: 'DarkPleasureKevin2' }))
 
   t.is(store.getState(), oldState)
 
     // Dispatch a nick that changed in this channel
-  store.dispatch(changeNick({ oldNick: 'PleasureKevin', newNick: 'PleasureKevin2' }))
+  store.dispatch(changeNick({ id: 123, oldNick: 'PleasureKevin', newNick: 'PleasureKevin2' }))
 
   t.is(store.getState().users.PleasureKevin, undefined)
   t.is(store.getState().users.PleasureKevin2, '+')
@@ -180,12 +181,12 @@ test('addChannelMode', t => {
 
   const oldState = store.getState()
 
-  store.dispatch(addChannelMode(parentState, { chan: '#bdsmdungeon', mode: 'o', param: 'PleasureKevin' }))
+  store.dispatch(addChannelMode(parentState, { id: 123, chan: '#bdsmdungeon', mode: 'o', param: 'PleasureKevin' }))
 
   t.is(store.getState().users.PleasureKevin, '@')
   t.deepEqual(store.getState().mode, oldState.mode)
 
-  store.dispatch(addChannelMode(parentState, { chan: '#bdsmdungeon', mode: 'q', param: '' }))
+  store.dispatch(addChannelMode(parentState, { id: 123, chan: '#bdsmdungeon', mode: 'q', param: '' }))
 
   t.is(store.getState().mode[3], 'q')
 })
@@ -197,12 +198,12 @@ test('removeChannelMode', t => {
 
   const oldState = store.getState()
 
-  store.dispatch(removeChannelMode(parentState, { chan: '#bdsmdungeon', mode: 'v', param: 'PleasureKevin' }))
+  store.dispatch(removeChannelMode(parentState, { id: 123, chan: '#bdsmdungeon', mode: 'v', param: 'PleasureKevin' }))
 
   t.is(store.getState().users.PleasureKevin, '')
   t.deepEqual(store.getState().mode, oldState.mode)
 
-  store.dispatch(removeChannelMode(parentState, { chan: '#bdsmdungeon', mode: 'n', param: '' }))
+  store.dispatch(removeChannelMode(parentState, { id: 123, chan: '#bdsmdungeon', mode: 'n', param: '' }))
 
   t.deepEqual(store.getState().mode, ['p', 't'])
 })

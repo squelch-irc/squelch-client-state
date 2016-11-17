@@ -51,14 +51,15 @@ module.exports = (store, getState = store => store.getState()) => {
     client.on('quit', e => store.dispatch(userQuit(e)))
     client.on('+mode', e => store.dispatch(addChannelMode(getState(store), e)))
     client.on('-mode', e => store.dispatch(removeChannelMode(getState(store), e)))
-    client.on('connecting', () => store.dispatch(setConnecting(true)))
-    client.on('connect', () => {
-      store.dispatch(setConnecting(false))
-      store.dispatch(setConnected(true))
+    client.on('connecting', e => store.dispatch(setConnecting({
+      ...e,
+      connecting: true
+    })))
+    client.on('connect', e => {
+      store.dispatch(setConnecting({ ...e, connecting: false }))
+      store.dispatch(setConnected({ ...e, connected: true }))
     })
-    client.on('disconnect', () => {
-      store.dispatch(disconnect())
-    })
+    client.on('disconnect', e => store.dispatch(disconnect(e)))
     client.on('raw', (e) => {
       if (e.command === '005') store.dispatch(setISupport(e))
     })
